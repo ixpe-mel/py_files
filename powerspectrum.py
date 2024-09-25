@@ -10,7 +10,6 @@ from astropy.io import fits
 import math
 from stingray import AveragedPowerspectrum
 from stingray import Lightcurve
-import locate
 import matplotlib.pyplot as plt
 def powerspectrum(data_file,gti,bin_length,seg_length):
 
