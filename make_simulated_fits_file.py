@@ -3,6 +3,7 @@
 
 import numpy as np
 import sys
+from astropy.io import fits
 from astropy.table import Table, Column
 sys.path.append('/home/c2032014/py_files')
 import load_and_clean as lac
