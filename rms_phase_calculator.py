@@ -51,10 +51,4 @@ def rms_phase_calc(mod_min, mod_max, mod_angle_array_12, data_12, lc_ref, seg_le
     frac_rms = [norm_factor * abs(i) for i in complex_G]
     phase = [math.atan2(i.imag, i.real) for i in complex_G]
 
-
-
-
-
-
-
-
+    return mod_arr, frac_rms, phase
