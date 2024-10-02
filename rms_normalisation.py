@@ -2,10 +2,11 @@ import numpy as np
 from stingray import Lightcurve, AveragedCrossspectrum
 
 #calculate the normalisation of fractional frac_rms
-def rms_normalisation(data_12,data_3,bin_length,seg_length,fmin,fmax,GTI):
-        print('data_12 times:',data_12['TIME'])
+def rms_normalisation(data_12,data_3,bin_length,seg_length,fmin,fmax,gti):
+        
+        GTI=list(np.loadtxt(str(gti)))
         data_12_times = data_12['TIME']
-        data_12_times=data_12_times.astype(float)
+        
         lightcurve_12=Lightcurve.make_lightcurve(data_12_times,dt=bin_length,gti=GTI)
         lightcurve_12.apply_gtis()
 
