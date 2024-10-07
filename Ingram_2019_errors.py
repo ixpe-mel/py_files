@@ -28,10 +28,10 @@ def ingr_2019_errs_cc(mod_min,mod_max,real_G,im_G,lc_subject,data_2,ps_2_mean,n,
     #Catching if the coherence is below 0 or above 1 and correcting....
 
     coherence=np.array(modulus_G**2/real_G*cs_ith_real_mean)
-    #print('coherence',coherence)
+    print('coherence',coherence)
 
     new_coherence = np.clip(coherence, 0, 1)
-
+    print('new_coherence',new_coherence)
     dG=np.sqrt(      (ps_2_mean / (n*m)) * (ps_1_subject_av - new_coherence*(cs_ith_real_mean) )     )
 
     return dG
@@ -39,13 +39,13 @@ def ingr_2019_errs_cc(mod_min,mod_max,real_G,im_G,lc_subject,data_2,ps_2_mean,n,
 
 #Assuming no coherence correction, calculate Ingram 2019 errorbars dG from 
 
-def ingr_2019_errs(real_G,im_G,lc_subject,ps_2_,mean,n,m,fmin,fmax,seg_length,bin_length,GTI):
+def ingr_2019_errs(real_G,im_G,lc_subject,ps_2_mean,n,m,fmin,fmax,seg_length,bin_length,GTI):
     modulus_G=np.sqrt((real_G**2)+(im_G**2))
     # Creating Powerspectrum
         
     ps_1_subject=Powerspectrum.from_lightcurve(lc_subject,seg_length,norm='frac')
-    ps_1_subject_av=ps_1_subject.power[(fmin<=ps_1_modbin_cut.freq) & (ps_1_modbin_cut.freq<=fmax)].mean()
+    ps_1_subject_av=ps_1_subject.power[(fmin<=ps_1_subject.freq) & (ps_1_subject.freq<=fmax)].mean()
     del ps_1_subject
         
-    dG=np.sqrt((1/(2*(n*m)))*((ps_1_modcut_mean_array*ps_2_mean)-((ps_2_mean/(real_G))*(modulus_G**2))))
+    dG=np.sqrt((1/(2*(n*m)))*((ps_1_subject_av*ps_2_mean)-((ps_2_mean/(real_G))*(modulus_G**2))))
     return dG
