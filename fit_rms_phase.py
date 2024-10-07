@@ -1,7 +1,7 @@
 #Takes rms and phase with corresponding errors and resturns the statistical significance of each fit
 import sys
 sys.path.append('/home/c2032014/py_files/')
-import fit models as fm
+import fit_models as fm
 import chi_square as cs
 import numpy as np
 import scipy
@@ -24,7 +24,7 @@ def fit_line(av_mod,frac_rms,frac_rms_err,phase,phase_err):
     dof_line_rms,dof_line_phase=len(av_mod)-1
 
 
-    frac_rms_line_chi=cs.chi_square(frac_rms,,fit_y_line_fracrms,frac_rms_err)#phase,phase_err,fit_y_line_phase,dof_line)
+    frac_rms_line_chi=cs.chi_square(frac_rms,fit_y_line_fracrms,frac_rms_err)#phase,phase_err,fit_y_line_phase,dof_line)
     phase_line_chi=cs.chi_square(phase,phase_err,fit_y_line_phase,dof_line_rms,dof_line_phase)
 
     reduced_chi_line=cs.reduced_chi_square(frac_rms_line_chi,phase_line_chi,dof_line)
