@@ -20,5 +20,5 @@ def rms_normalisation(data_12,data_3,bin_length,seg_length,fmin,fmax,gti):
         norm_factor=(np.sqrt((fmax-fmin))/np.sqrt(av_power_norm_real))
         del avg_cs
 
-        return norm_factor,lc_ref
+        return norm_factor,lc_ref,GTI
 
