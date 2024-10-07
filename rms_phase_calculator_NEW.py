@@ -3,9 +3,11 @@ import math
 from stingray import Lightcurve, AveragedCrossspectrum, Powerspectrum
 from functools import partial
 import Ingram_2019_errors as I_19errs
+import warnings
+warnings.filterwarnings('ignore')
 #calculating the rms and phase over modulation angle via the cross-spectrum of datasets
 
-def G_dG_calc(mod_min, mod_max,av_mod,data_1,data_2,lc_ref,ps_2_mean,GTI,bin_length, seg_length, fmin, fmax,mod_bin_number,spur_sub=True,coherence_corrector=True):
+def G_calc(mod_min, mod_max,av_mod,data_1,data_2,lc_ref,ps_2_mean,GTI,bin_length, seg_length, fmin, fmax,mod_bin_number,spur_sub=True,coherence_corrector=True):
     """ Process a single modulation angle range and return the averaged real and imaginary power. """
     # Filter data for the current modulation angle range
     #print(mod_min,mod_max)
@@ -53,21 +55,22 @@ def G_dG_calc(mod_min, mod_max,av_mod,data_1,data_2,lc_ref,ps_2_mean,GTI,bin_len
 
     n=len(cs.power.real[(fmin<=cs.freq) & (cs.freq<=fmax)]) #number of datapoints of power spectrum in frequency range
     m=cs.m #the number of cross spectra averaged together
-    
-    
-
+    return G_real, G_im, n, m
     
 
+def dG_calc(mod_min,mod_max,G_real,G_im,lc_subject,lc_ref,data_2,ps_2_mean,n,m,fmin,fmax,seg_length,bin_length,GTI,coherence_corrector)
 
+    ps_2=Powerspectrum.from_lightcurve(lc_ref,seg_length,norm='frac')
+    ps_2_mean=ps_2.power[(fmin<=ps_2.freq) & (ps_2.freq<=fmax)].mean()
 
     if coherence_corrector==True:
+        print('Applying coherence correction...')
         dG=I_19errs.ingr_2019_errs_cc(mod_min,mod_max,G_real,G_im,lc_subject,data_2,ps_2_mean,n,m,fmin,fmax,seg_length,bin_length,GTI)
     else:
-        dG=I_19errs.ing_2019_errs(G_real,G_im,lc_subject,ps_2_,mean,n,m,fmin,fmax,seg_length,bin_length,GTI)
+        print('Applying no coherence correction...')
+        dG=I_19errs.ing_2019_errs(G_real,G_im,lc_subject,ps_2_mean,n,m,fmin,fmax,seg_length,bin_length,GTI)
     
-        
-
-    return G_real, G_im , dG
+    return dG
 
 
 
@@ -87,22 +90,17 @@ def rms_phase_anderr_calc(data_1,data_2,gti, lc_ref,bin_length,seg_length, fmin,
     av_mod_err=[(i[1]-i[0])/2 for i  in mod_angle_list]
 
 
-    #Calculating products for Ingram 2019 errorbars
-    lightcurve_2=Lightcurve.make_lightcurve(data_2['TIME'],dt=bin_length,gti=GTI)
-    lightcurve_2.apply_gtis()
-    ps_2=Powerspectrum.from_lightcurve(lightcurve_2,seg_length,norm='frac')
-    ps_2_mean=ps_2.power[(fmin<=ps_2.freq) & (ps_2.freq<=fmax)].mean()
-
+    
     #Make partial function
-    partial_real_im_G_calc = partial(G_dG_calc, data_1=data_1 ,data_2=data_2,ps_2_mean=ps_2_mean,lc_ref=lc_ref,GTI=GTI,bin_length=bin_length, seg_length=seg_length, fmin=fmin, fmax=fmax,mod_bin_number=mod_bin_number,spur_sub=spur_sub)
-
+    partial_G_calc = partial(G_dG_calc, data_1=data_1 ,data_2=data_2,ps_2_mean=ps_2_mean,lc_ref=lc_ref,GTI=GTI,bin_length=bin_length, seg_length=seg_length, fmin=fmin, fmax=fmax,mod_bin_number=mod_bin_number,spur_sub=spur_sub)
+    partial_dG_calc=partial(dG_calc,data_2=data_2,ps_2_mean=ps_2_mean,n=n,m=m,fmin=fmin,fmax=fmax,seg_length=seg_length,bin_length=bin_length,GTI=GTI,coherence_corrector=coherence_corrector)
     #vectorize real/im calculator
-    real_im_G_calc_VEC = np.vectorize(partial_real_im_G_calc)
-
+    partial_G_calc_VEC = np.vectorize(partial_real_im_G_calc)
+    partial_dG_calc_VEC=np.vectorize(partial_dG_calc)
         
-        # Get the real and imaginary parts of the power spectrum for the current modulation range
-    G_real, G_im, dG = real_im_G_calc_VEC(mod_min_array, mod_max_array,av_mod)#,data_1, lc_ref,GTI,bin_length, seg_length, fmin, fmax,spur_sub)
- 
+    # Get the real and imaginary parts of the power spectrum for the current modulation range
+    G_real, G_im = partial_G_calc_VEC(mod_min_array, mod_max_array,av_mod)#,data_1, lc_ref,GTI,bin_length, seg_length, fmin, fmax,spur_sub)
+    dG=dG_calc_VEC(mod_min_array,mod_max_array,G_real,G_im,lc_subject,data_2,ps_2_mean,n,m,fmin,fmax,seg_length,bin_length,GTI,coherence_corrector)
     # Convert real and imaginary power into complex G
     
     complex_G = [complex(a, b) for a, b in zip(G_real, G_im)]
@@ -113,7 +111,8 @@ def rms_phase_anderr_calc(data_1,data_2,gti, lc_ref,bin_length,seg_length, fmin,
     frac_rms_err=norm_factor*dG
     abs_vec=np.vectorize(abs)
     phase_err=dG/abs_vec(complex_G)
-    return frac_rms,frac_rms_err ,phase,phase_err
+
+    return av_mod,av_mod_err,frac_rms,frac_rms_err ,phase,phase_err
 
 
 
