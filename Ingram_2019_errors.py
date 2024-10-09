@@ -16,9 +16,11 @@ def ingr_2019_errs_cc(mod_min,mod_max,mod_bin_number,real_G,im_G,lc_subject,cs_r
     lc2_subject=Lightcurve.make_lightcurve(data_cut_2['TIME'],dt=bin_length,gti=GTI)
     lc2_subject.apply_gtis()
     lc2_subject_countrate2=lc2_subject.meanrate
-
-    lc2_subject=lcss.lc_spur_sub(data_cut_2,lc2_subject_countrate2,mod_bin_number,av_mod,bin_length,lc2_subject)
+    if spur_sub=True
+        lc2_subject=lcss.lc_spur_sub(data_cut_2,lc2_subject_countrate2,mod_bin_number,av_mod,bin_length,lc2_subject)
     #lc2_subject_countrate2=lc2_subject.meanrate
+    else:
+        lc2_subject=lc2_subject 
 
     ps_1_subject=Powerspectrum.from_lightcurve(lc_subject,seg_length,norm='frac')
     ps_1_subject_av=ps_1_subject.power[(fmin<=ps_1_subject.freq) & (ps_1_subject.freq<=fmax)].mean()
