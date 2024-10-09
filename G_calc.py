@@ -3,13 +3,16 @@ import math
 from stingray import Lightcurve, AveragedCrossspectrum, Powerspectrum
 from functools import partial
 import warnings
+import importlib
+
 warnings.filterwarnings('ignore')
 
 
-def G_calc(mod_min, mod_max,data_1,data_2,lc_ref,GTI,bin_length, seg_length, fmin, fmax,mod_bin_number,spur_sub=True,coherence_corrector=True):
+def G_calc(mod_min, mod_max,data_1,lc_ref,GTI,bin_length, seg_length, fmin, fmax,mod_bin_number,spur_sub=True,coherence_corrector=True):
     """ Process a single modulation angle range and return the averaged real and imaginary power. """
     # Filter data for the current modulation angle range
-    #print(mod_min,mod_max)
+    print('start')
+    print(np.degrees(mod_min),np.degrees(mod_max))
     av_mod=np.mean([mod_min,mod_max])
     data_phi=data_1['PHI']
     #print(len(data_phi))   
@@ -25,7 +28,7 @@ def G_calc(mod_min, mod_max,data_1,data_2,lc_ref,GTI,bin_length, seg_length, fmi
    
 
     if spur_sub==True:
-        print('Subtracting spurious polarisation...')
+        #print('Subtracting spurious polarisation...')
         q_spur_1=data_bin['QSP'] # per event spurious stokes parameters for mod bin of interest
         u_spur_1=data_bin['USP']
 
@@ -43,8 +46,11 @@ def G_calc(mod_min, mod_max,data_1,data_2,lc_ref,GTI,bin_length, seg_length, fmi
         lc_counts_subtracted=lc.counts-spur_sub_counts #subtracting spur lc
         lc_subject=Lightcurve(lc.time,lc_counts_subtracted)
 
+
+
+
     else:
-        print('Not subtracting spurious polarisation...')
+        #print('Not subtracting spurious polarisation...')
         lc_subject=lc
 
 
@@ -53,9 +59,10 @@ def G_calc(mod_min, mod_max,data_1,data_2,lc_ref,GTI,bin_length, seg_length, fmi
     
     # Extract the real and imaginary parts of the power spectrum
     G_real = cs.power.real[(fmin <= cs.freq) & (cs.freq <= fmax)].mean()
+    print('G_real',G_real)
     G_im = cs.power.imag[(fmin <= cs.freq) & (cs.freq <= fmax)].mean()
 
     n=len(cs.power.real[(fmin<=cs.freq) & (cs.freq<=fmax)]) #number of datapoints of power spectrum in frequency range
     m=cs.m #the number of cross spectra averaged together
-    return G_real, G_im, n, m,lc_subject
+    return G_real, G_im, n, m, lc_subject
     
