@@ -18,5 +18,5 @@ def lc_spur_sub(data,lc_countrate,mod_bin_number,av_mod,bin_length,lc):
     spur_sub_counts=[spur_sub]*len(lc.time)
     lc_spur=Lightcurve(lc.time,spur_sub_counts)                                
     lc_counts_subtracted=lc.counts-spur_sub_counts #subtracting spur lc
-    lc=Lightcurve(lc.time,lc_counts_subtracted)
+    lc=Lightcurve(lc.time,lc_counts_subtracted,gti=lc.gti)
     return lc
