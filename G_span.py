@@ -1,6 +1,6 @@
 #Vectorizing G_calc to produce evenly spaced G from a list of modulation angles
 import G_calc as Gc
-import dG_calc as dG_calc
+#import dG_calc as dG_calc
 import numpy as np
 from functools import partial
 import importlib
