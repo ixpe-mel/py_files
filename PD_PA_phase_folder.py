@@ -2,7 +2,10 @@
 import numpy as np
 from astropy.io import fits
 import math
+import matplotlib.pyplot as plt
 from stingray import Lightcurve
+import importlib
+
 def PD_PA_PHASE(ixpe_event_file_DU1,
            ixpe_event_file_DU2,
            ixpe_event_file_DU3,ixpe_master_GTI,
@@ -13,14 +16,8 @@ def PD_PA_PHASE(ixpe_event_file_DU1,
     
     import sys
     sys.path.append('/home/c2032014/PhD/py_files')
-    import powerspectrum as p
-    import crossspectrum as c
-    import master_GTI as g
-    import concatenate_ixpe_fits as concat
-    import spin_period_finder as spin
     import spin_phase_calculator as phase
-    import Calculate_Stokes as stokes
-
+    importlib.reload(phase)
         # Event file DU1
         
     with fits.open(ixpe_event_file_DU1) as hdu:
@@ -180,7 +177,7 @@ def PD_PA_PHASE(ixpe_event_file_DU1,
     # Define the parameters
 
     phase_minimum = 0  # Minimum modulation angle in degrees
-    phase_maximum = 1  # Maximum modulation angle in degrees
+    phase_maximum = 2*np.pi  # Maximum modulation angle in degrees
 
     bspace = np.linspace((phase_minimum), (phase_maximum), phase_bin_number + 1)
     phase_bin_list = [(bspace[i - 1], bspace[i]) for i in range(1, len(bspace))]
@@ -220,6 +217,8 @@ def PD_PA_PHASE(ixpe_event_file_DU1,
     
     PA_array=[]
     dPA_array=[]
+
+    I_array=[]
     
     #phase_plot=[]
     
@@ -274,6 +273,7 @@ def PD_PA_PHASE(ixpe_event_file_DU1,
         dI_NEFF_TOT_sqrd_phase_cut=dI_NEFF_1_sqrd_phase_cut+dI_NEFF_2_sqrd_phase_cut+dI_NEFF_3_sqrd_phase_cut
         dI_NEFF_TOT_phase_cut=np.sqrt(dI_NEFF_TOT_sqrd_phase_cut)
         I_NEFF_TOT_phase_cut=I_NEFF_1_phase_cut+I_NEFF_2_phase_cut+I_NEFF_3_phase_cut
+        I_array.append(I_NEFF_TOT_phase_cut)
 
 
 
@@ -360,18 +360,32 @@ def PD_PA_PHASE(ixpe_event_file_DU1,
         
     PD_array=[100*i for i in PD_array]
     dPD_array=[100*i for i in dPD_array]
-        
-    #plt.figure()
-    #plt.plot(phase_plot,PA_array,'.',label='PA')
-    #plt.plot(phase_plot,PD_array,'.',label='PD')
-    #plt.errorbar(phase_plot,PA_array,yerr=dPA_array,ls='none')
-    #plt.errorbar(phase_plot,PD_array,yerr=dPD_array,ls='none')
-    #plt.legend()
-    #plt.show()
+    
+    plt.figure()
+    plt.title('I vs phase')
+    plt.plot(phase_plot,I_array,'.')
+    plt.show()
+    
+    plt.figure()
+    plt.title('PA vs phase')
+    plt.plot(phase_plot,PA_array,'.')
+    plt.xlabel('Phase')
+    plt.ylabel('PA (degrees)')
+    plt.errorbar(phase_plot,PA_array,yerr=dPA_array,ls='none')
+    plt.show()
+    
+    plt.figure()
+    plt.title('PD vs Phase')
+    plt.plot(phase_plot,PD_array,'.',label='PD (percent)')
+    plt.xlabel('Phase')
+    plt.ylabel('PD (percent)')
+    plt.errorbar(phase_plot,PD_array,yerr=dPD_array,ls='none')
+    plt.legend()
+    plt.show()
 
-    results=np.array(tuple(zip(phase_plot, av_phase_err, PD_array, dPD_array, PA_array, dPA_array)))
+    results=np.array(tuple(zip(phase_plot, av_phase_err, PD_array, dPD_array, PA_array, dPA_array,I_array)))
     np.savetxt(output_file,results)
     
-    return phase_plot, av_phase_err, PD_array, dPD_array, PA_array, dPA_array
+    return phase_plot, av_phase_err, PD_array, dPD_array, PA_array, dPA_array,I_array
         
 
