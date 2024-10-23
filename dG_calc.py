@@ -32,6 +32,6 @@ def dG_calc(mod_min,mod_max,lc_subject,G_real,G_im,
         print('Applying no coherence correction or spur sub...')
         dG=I_19errs.ingr_2019_errs(real_G=G_real,im_G=G_im,lc_subject=lc_subject,cs_ref_real_mean=cs_ref_real_mean,ps_2_mean=ps_2_mean,n=n,m=m,fmin=fmin,fmax=fmax,seg_length=seg_length,bin_length=bin_length,GTI=GTI,spurious_sub=False)
 
-    print('dG',dG)
+    #print('dG',dG)
         #dG=I_19errs.ingr_2019_errs(G_real,G_im,lc_subject,ps_2_mean,n,m,fmin,fmax,seg_length,bin_length,GTI)
     return dG
