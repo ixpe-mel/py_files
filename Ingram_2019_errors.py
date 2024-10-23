@@ -8,7 +8,7 @@ from stingray import Lightcurve, Crossspectrum, AveragedCrossspectrum, Powerspec
 def ingr_2019_errs_cc(mod_min,mod_max,mod_bin_number,real_G,im_G,lc_subject,cs_ref_real_mean,data_2,ps_2_mean,n,m,fmin,fmax,seg_length,bin_length,GTI,spurious_sub):
    
         # Creating Cross spectrum 'ith'
-    #print(GTI)
+    print(GTI)
     av_mod=(mod_min+mod_max)/2
 
 
@@ -34,6 +34,8 @@ def ingr_2019_errs_cc(mod_min,mod_max,mod_bin_number,real_G,im_G,lc_subject,cs_r
     print('cs_ith_real_mean',cs_ith_real_mean)
     #cs_ith_im_mean=cs_ith.power.imag[(fmin<=cs_ith.freq) & (cs_ith.freq<=fmax)].mean()
     del cs_ith
+    print('real G',type(real_G))
+    print('im G',type(im_G))
     modulus_G=np.sqrt((real_G**2)+(im_G**2))
     cs_ith_new=modulus_G**2/(cs_ref_real_mean)
     print('cs_ith_new',cs_ith_new)
@@ -73,10 +75,10 @@ def ingr_2019_errs_cc(mod_min,mod_max,mod_bin_number,real_G,im_G,lc_subject,cs_r
 
 #Assuming no coherence correction, calculate Ingram 2019 errorbars dG from 
 
-def ingr_2019_errs(real_G,im_G,lc_subject,cs_ref_real_mean,ps_2_mean,n,m,fmin,fmax,seg_length,bin_length,GTI):
+def ingr_2019_errs(real_G,im_G,lc_subject,cs_ref_real_mean,ps_2_mean,n,m,fmin,fmax,seg_length,bin_length,GTI,spurious_sub):
     modulus_G=np.sqrt((real_G**2)+(im_G**2))
     # Creating Powerspectrum
-        
+    print('lc subject type',type(lc_subject))
     ps_1_subject=Powerspectrum.from_lightcurve(lc_subject,seg_length,norm='frac')
     ps_1_subject_av=ps_1_subject.power[(fmin<=ps_1_subject.freq) & (ps_1_subject.freq<=fmax)].mean()
     del ps_1_subject
