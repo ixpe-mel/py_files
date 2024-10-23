@@ -20,26 +20,44 @@ def dG_span(mod_bin_number,G_real,G_im,lc_subject,lc_1_ref,lc_2_ref,data_2,n,m,f
         print('Applying coherence correction and spurious sub...')
         partial_dG_calc=partial(dGc.dG_calc, G_real=G_real,
                G_im=G_im,lc_1_ref=lc_1_ref,lc_2_ref=lc_2_ref,data_2=data_2,n=n,m=m,fmin=fmin,fmax=fmax,seg_length=seg_length,bin_length=bin_length,mod_bin_number=mod_bin_number,GTI=GTI)
-        
+        partial_dG_calc_VEC = np.vectorize(partial_dG_calc,otypes=[object])
+
+        result= partial_dG_calc_VEC(mod_min_array, mod_max_array,lc_subject)
+    
+    
     elif coherence_corrector==True and spurious_sub==False:
         print('Applying coherence correction BUT NO SPUR SUB...')
         partial_dG_calc=partial(dGc.dG_calc, G_real=G_real,
                G_im=G_im,lc_1_ref=lc_1_ref,lc_2_ref=lc_2_ref,data_2=data_2,n=n,m=m,fmin=fmin,fmax=fmax,seg_length=seg_length,bin_length=bin_length,GTI=GTI,coherence_corrector=False)
+        partial_dG_calc_VEC = np.vectorize(partial_dG_calc,otypes=[object])
+        print(partial_dG_calc_VEC)
+        result = partial_dG_calc_VEC(mod_min_array, mod_max_array,lc_subject)
+        print(result)
+    
+    
     elif coherence_corrector==False and spurious_sub==True:
+
         partial_dG_calc=partial(dGc.dG_calc, G_real=G_real,
                G_im=G_im,lc_1_ref=lc_1_ref,lc_2_ref=lc_2_ref,data_2=data_2,n=n,m=m,fmin=fmin,fmax=fmax,seg_length=seg_length,bin_length=bin_length,mod_bin_number=mod_bin_number,GTI=GTI,spurious_sub=False)
+        partial_dG_calc_VEC = np.vectorize(partial_dG_calc,otypes=[object])
+        result= partial_dG_calc_VEC(mod_min_array, mod_max_array,lc_subject)
+    
+    
+    #
     else:    
         partial_dG_calc=partial(dGc.dG_calc, G_real=G_real,
                G_im=G_im,lc_1_ref=lc_1_ref,lc_2_ref=lc_2_ref,data_2=data_2,n=n,m=m,fmin=fmin,fmax=fmax,seg_length=seg_length,bin_length=bin_length,GTI=GTI,coherence_corrector=False,spurious_sub=False)
     #print('mod_min_array',mod_min_array)
+        partial_dG_calc_VEC = np.vectorize(partial_dG_calc,otypes=[object])
+        result= partial_dG_calc_VEC(mod_min_array, mod_max_array,lc_subject)
 
     #print('mod_max_array',mod_max_array)
 
     
     #vectorize real/im calculator
-    partial_dG_calc_VEC = np.vectorize(partial_dG_calc,otypes=[object])
-    print('moving to g calc')
+    #partial_dG_calc_VEC = np.vectorize(partial_dG_calc,otypes=[object])
+    #print('moving to g calc')
     # Get the real and imaginary parts of the power spectrum for the current modulation range
-    result= partial_dG_calc_VEC(mod_min_array, mod_max_array,lc_subject)#,data_1, lc_ref,GTI,bin_length, seg_length, fmin, fmax,spur_sub)
+    #result= partial_dG_calc_VEC(mod_min_array, mod_max_array,lc_subject)#,data_1, lc_ref,GTI,bin_length, seg_length, fmin, fmax,spur_sub)
     # = zip(*result)
-    return result
+    #return result
