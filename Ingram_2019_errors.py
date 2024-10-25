@@ -58,19 +58,24 @@ def ingr_2019_errs_cc(mod_min,mod_max,mod_bin_number,real_G,im_G,lc_subject,cs_r
     #print('new_coherence',new_coherence)
     #dG_2=
 
-    dG_original=np.sqrt(      (ps_2_mean / (2*n*m)) * (ps_1_subject_av - corrected_coherence*(cs_ith_real_mean) )     )
+    #dG_original=np.sqrt(      (ps_2_mean / (2*n*m)) * (ps_1_subject_av - corrected_coherence*(cs_ith_real_mean) )     )
     #print('dG_original',dG_original)
     #dG_new_csith=np.sqrt(      (ps_2_mean / (2*n*m)) * (ps_1_subject_av - corrected_coherence*(cs_ith_new) ) )
     #print('dG_new_csith',dG_new_csith)
     #dG_nogamma=np.sqrt(    (ps_2_mean/(2*n*m))   *   (ps_1_subject_av - (modulus_G**2/cs_ref_real_mean)    ))    
     #print('dG_nogamma',dG_nogamma)
-
-    #dG_adam=np.sqrt( (  (ps_2_mean*ps_1_subject_av) - ( (ps_2_mean/cs_ref_real_mean) * modulus_G**2   )       )    / (2*n*m)      )
+    #print(type(ps_2_mean))
+    #print(type(ps_1_subject_av))
+    #print(type(modulus_G))
+    #print(type(cs_ref_real_mean))
+    #print(type(n))
+    #print(type(m))
+    dG_adam=np.sqrt( (  (ps_2_mean*ps_1_subject_av) - ( (ps_2_mean/cs_ref_real_mean) * modulus_G**2   )       )    / (2*n*m)      )
     #print(dG_adam)
 
 
     
-    return dG_original
+    return dG_adam
 
 
 #Assuming no coherence correction, calculate Ingram 2019 errorbars dG from 
