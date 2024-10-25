@@ -9,9 +9,9 @@ importlib.reload(dGc)
 
 def dG_span(mod_bin_number,
             G_real_span,G_im_span,
-            lc_subject_span,lc_1_ref,lc_2_ref,
+            lc_subject_span,n_span,m_span,
             data_2,
-            n,m,fmin,fmax,seg_length,bin_length,GTI,ps_2_mean,cs_ref_real_mean,
+            fmin,fmax,seg_length,bin_length,GTI,ps_2_mean,cs_ref_real_mean,
             coherence_corrector=True,spurious_sub=True):
 
     #create modulation angle bins
@@ -26,12 +26,13 @@ def dG_span(mod_bin_number,
     result=[]
     if coherence_corrector==True and spurious_sub==True:
         #print('Applying coherence correction and spurious sub...')
-        partial_dG_calc=partial(dGc.dG_calc
-                                ,lc_1_ref=lc_1_ref,lc_2_ref=lc_2_ref,data_2=data_2,n=n,m=m,fmin=fmin,fmax=fmax,seg_length=seg_length,bin_length=bin_length,mod_bin_number=mod_bin_number,GTI=GTI,ps_2_mean=ps_2_mean,cs_ref_real_mean=cs_ref_real_mean,coherence_corrector=True,spurious_sub=True)
-
+        partial_dG_calc=partial(dGc.dG_calc,data_2=data_2,fmin=fmin,fmax=fmax,seg_length=seg_length,bin_length=bin_length,GTI=GTI,mod_bin_number=mod_bin_number,ps_2_mean=ps_2_mean,cs_ref_real_mean=cs_ref_real_mean,coherence_corrector=True,spurious_sub=True)
+#mod_min,mod_max,lc_subject,G_real,G_im,lc_2_ref,data_2,n,m,fmin,fmax,seg_length,bin_length,mod_bin_number,GTI,ps_2_mean,cs_ref_real_mean,coherence_corrector=True,spurious_sub=True):
         
-        results = [partial_dG_calc(min_val, max_val, span,real,im) for min_val, max_val, span ,real,im in zip(mod_min_array, mod_max_array, lc_subject_span,G_real_span,G_im_span)]
+        results = [partial_dG_calc(min_val, max_val, span,real,im,n_span,m_span) for min_val, max_val, span ,real,im, n_span,m_span in zip(mod_min_array, mod_max_array, lc_subject_span,G_real_span,G_im_span,n_span,m_span)]
         #print(results)
+        #mod_min,mod_max,lc_subject,G_real,G_im,
+    #     lc_1_ref,lc_2_ref,data_2,n,m,fmin,fmax,seg_length,bin_length,mod_bin_number,GTI,ps_2_mean,cs_ref_real_mean,coherence_corrector=True,spurious_sub=True):
 
         
         #for i in zip(mod_min_array,mod_max_array,lc_subject_span,G_real_span,G_im_span):
