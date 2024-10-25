@@ -4,16 +4,13 @@ import Ingram_2019_errors as I_19errs
 import importlib
 import lc_spurious_sub as lcss
 importlib.reload(I_19errs)
-def dG_calc(mod_min,mod_max,lc_subject,G_real,G_im,
-            lc_1_ref,lc_2_ref,data_2,n,m,fmin,fmax,seg_length,bin_length,mod_bin_number,GTI,ps_2_mean,cs_ref_real_mean,coherence_corrector=True,spurious_sub=True):
+def dG_calc(mod_min,mod_max,lc_subject,G_real,G_im,n,m,data_2,fmin,fmax,seg_length,bin_length,mod_bin_number,GTI,ps_2_mean,cs_ref_real_mean,coherence_corrector=True,spurious_sub=True):
     #print(lc_subject)
     av_mod=(mod_min+mod_max)/2
     #lightcurve_2=Lightcurve.make_lightcurve(data_2['TIME'],dt=bin_length,gti=GTI)
     #lightcurve_2.apply_gtis()
     #lightcurve_2_countrate2=lightcurve_2.meanrate
     #lightcurve_2=lcss.lc_spur_sub(data_2,lightcurve_2_countrate2,mod_bin_number,av_mod,bin_length,lightcurve_2)
-    
-    
     
     #print('cs_ref_real_mean',cs_ref_real_mean)
 
