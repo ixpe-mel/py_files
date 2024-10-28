@@ -8,7 +8,7 @@ import importlib
 warnings.filterwarnings('ignore')
 
 
-def G_calc(mod_min, mod_max,data_1,lc_ref,GTI,bin_length, seg_length, fmin, fmax,mod_bin_number,spur_sub=True,coherence_corrector=True):
+def G_calc(mod_min, mod_max,data_1,lc_ref,GTI,bin_length, seg_length, fmin, fmax,mod_bin_number,spur_sub,coherence_corrector):
     """ Process a single modulation angle range and return the averaged real and imaginary power. """
     # Filter data for the current modulation angle range
     print('start')
