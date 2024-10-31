@@ -6,7 +6,7 @@ import G_calc_parallel as Gcp
 import numpy as np
 from functools import partial
 import importlib
-importlib.reload(Gc)
+
 def G_span(mod_min,mod_max,mod_bin_number,data_1_times,data_1_phi,data_1_qsp,data_1_usp,lc_ref,GTI,bin_length, seg_length, fmin, fmax,spur_sub=False,coherence_corrector=False):
 
     #create modulation angle bins
