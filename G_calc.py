@@ -47,7 +47,7 @@ def G_calc(mod_min, mod_max,data_1,lc_ref,GTI,bin_length, seg_length, fmin, fmax
         lc_subject=Lightcurve(lc.time,lc_counts_subtracted)
 
 
-
+        #do over time ? READ
 
     else:
         #print('Not subtracting spurious polarisation...')
