@@ -20,3 +20,6 @@ def lc_spur_sub(data,lc_countrate,mod_bin_number,av_mod,bin_length,lc):
     lc_counts_subtracted=lc.counts-spur_sub_counts #subtracting spur lc
     lc=Lightcurve(lc.time,lc_counts_subtracted,gti=lc.gti)
     return lc
+
+# make more efficient and faster by only subtracting off constant for each modulation angle bin (compare this to my this method and see if it is the same))
+        # if spurious not put om then dont take off
