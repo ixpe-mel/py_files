@@ -12,7 +12,7 @@ def dG_span(mod_bin_number,
             lc_subject_span,n_span,m_span,
             data_2,
             fmin,fmax,seg_length,bin_length,GTI,ps_2_mean,cs_ref_real_mean,
-            coherence_corrector=True,spurious_sub=True):
+            coherence_corrector=False):
 
     #create modulation angle bins
     mod_min_global = np.radians(-90)
@@ -24,12 +24,15 @@ def dG_span(mod_bin_number,
     av_mod = (mod_min_array + mod_max_array) / 2
     av_mod_err = (mod_max_array - mod_min_array) / 2
     result=[]
-    if coherence_corrector==True and spurious_sub==True:
+    if coherence_corrector==True:
         #print('Applying coherence correction and spurious sub...')
-        partial_dG_calc=partial(dGc.dG_calc,data_2=data_2,fmin=fmin,fmax=fmax,seg_length=seg_length,bin_length=bin_length,GTI=GTI,mod_bin_number=mod_bin_number,ps_2_mean=ps_2_mean,cs_ref_real_mean=cs_ref_real_mean,coherence_corrector=True,spurious_sub=True)
+        partial_dG_calc=partial(dGc.dG_calc,data_2=data_2,n=n_span[0],m=m_span[0],fmin=fmin,fmax=fmax,
+                                seg_length=seg_length,
+                                bin_length=bin_length,GTI=GTI,
+                                ps_2_mean=ps_2_mean,cs_ref_real_mean=cs_ref_real_mean,coherence_corrector=True)
 #mod_min,mod_max,lc_subject,G_real,G_im,lc_2_ref,data_2,n,m,fmin,fmax,seg_length,bin_length,mod_bin_number,GTI,ps_2_mean,cs_ref_real_mean,coherence_corrector=True,spurious_sub=True):
         
-        results = [partial_dG_calc(min_val, max_val, span,real,im,n_span,m_span) for min_val, max_val, span ,real,im, n_span,m_span in zip(mod_min_array, mod_max_array, lc_subject_span,G_real_span,G_im_span,n_span,m_span)]
+        results = [partial_dG_calc(min_val, max_val, span,real,im) for min_val, max_val, span ,real,im,  in zip(mod_min_array, mod_max_array, lc_subject_span,G_real_span,G_im_span)]
         #print(results)
         #mod_min,mod_max,lc_subject,G_real,G_im,
     #     lc_1_ref,lc_2_ref,data_2,n,m,fmin,fmax,seg_length,bin_length,mod_bin_number,GTI,ps_2_mean,cs_ref_real_mean,coherence_corrector=True,spurious_sub=True):
@@ -38,29 +41,36 @@ def dG_span(mod_bin_number,
         #for i in zip(mod_min_array,mod_max_array,lc_subject_span,G_real_span,G_im_span):
          #   result.append(partial_dG_calc(i[0],i[1],i[2],i[3],i[4]))
 
-    elif coherence_corrector==True and spurious_sub==False:
-        #print('Applying coherence correction BUT NO SPUR SUB...')
-        partial_dG_calc=partial(dGc.dG_calc,
-                                lc_1_ref=lc_1_ref,lc_2_ref=lc_2_ref,data_2=data_2,n=n,m=m,fmin=fmin,fmax=fmax,seg_length=seg_length,bin_length=bin_length,mod_bin_number=mod_bin_number,GTI=GTI,ps_2_mean=ps_2_mean,cs_ref_real_mean=cs_ref_real_mean,spurious_sub=False)
+ #   elif coherence_corrector==True and spurious_sub==False:
+ #       #print('Applying coherence correction BUT NO SPUR SUB...')
+ #       partial_dG_calc=partial(dGc.dG_calc,data_2=data_2,n=n_span[0],m=m_span[0],fmin=fmin,fmax=fmax,
+ #                               seg_length=seg_length,bin_length=bin_length,GTI=GTI,ps_2_mean=ps_2_mean,
+ #                               cs_ref_real_mean=cs_ref_real_mean,spurious_sub=False)#
 
         #for i in zip(mod_min_array,mod_max_array,lc_subject_span,G_real_span,G_im_span):
         #    result.append(partial_dG_calc(i[0],i[1],i[2],i[3],i[4]))
 
-        result = [partial_dG_calc(min_val, max_val, span,real,im) for min_val, max_val, span ,real,im in zip(mod_min_array, mod_max_array, lc_subject_span,G_real_span,G_im_span)]
+#        result = [partial_dG_calc(min_val, max_val, span,real,im) for min_val, max_val, span ,real,im in zip(mod_min_array, mod_max_array, lc_subject_span,G_real_span,G_im_span)]
 
-    elif coherence_corrector==False and spurious_sub==True:
+#    elif coherence_corrector==False and spurious_sub==True:
             
-            partial_dG_calc=partial(dGc.dG_calc,
-                                    lc_1_ref=lc_1_ref,lc_2_ref=lc_2_ref,data_2=data_2,n=n,m=m,fmin=fmin,fmax=fmax,seg_length=seg_length,bin_length=bin_length,mod_bin_number=mod_bin_number,GTI=GTI,ps_2_mean=ps_2_mean,cs_ref_real_mean=cs_ref_real_mean,coherence_corrector=False,spurious_sub=True)
-    
-            #for i in zip(mod_min_array,mod_max_array,lc_subject_span,G_real_span,G_im_span):
+#            partial_dG_calc=partial(dGc.dG_calc,
+#                                    data_2=data_2,n=n_span,m=m_span,fmin=fmin,fmax=fmax,
+#                                    seg_length=seg_length,bin_length=bin_length,GTI=GTI,
+#                                    ps_2_mean=ps_2_mean,cs_ref_real_mean=cs_ref_real_mean,
+#                                    coherence_corrector=False,spurious_sub=True)
+#    
+#            #for i in zip(mod_min_array,mod_max_array,lc_subject_span,G_real_span,G_im_span):
             #    result.append(partial_dG_calc(i[0],i[1],i[2],i[3],i[4]))
 
-            result = [partial_dG_calc(min_val, max_val, span,real,im) for min_val, max_val, span ,real,im in zip(mod_min_array, mod_max_array, lc_subject_span,G_real_span,G_im_span)]
+#            result = [partial_dG_calc(min_val, max_val, span,real,im) for min_val, max_val, span ,real,im in zip(mod_min_array, mod_max_array, lc_subject_span,G_real_span,G_im_span)]
 
     else:
         partial_dG_calc=partial(dGc.dG_calc, 
-                                lc_1_ref=lc_1_ref,lc_2_ref=lc_2_ref,data_2=data_2,n=n,m=m,fmin=fmin,fmax=fmax,seg_length=seg_length,bin_length=bin_length,mod_bin_number=mod_bin_number,GTI=GTI,ps_2_mean=ps_2_mean,cs_ref_real_mean=cs_ref_real_mean,coherence_corrector=False,spurious_sub=False)
+                                data_2=data_2,n=n_span[0],m=m_span[0],fmin=fmin,fmax=fmax,
+                                seg_length=seg_length,bin_length=bin_length,GTI=GTI,ps_2_mean=ps_2_mean,
+                                cs_ref_real_mean=cs_ref_real_mean,
+                                coherence_corrector=False)
         #for i in zip(mod_min_array,mod_max_array,lc_subject_span,G_real_span,G_im_span):
         #    result.append(partial_dG_calc(i[0],i[1],i[2],i[3],i[4]))
         result = [partial_dG_calc(min_val, max_val, span,real,im) for min_val, max_val, span ,real,im in zip(mod_min_array, mod_max_array, lc_subject_span,G_real_span,G_im_span)]
