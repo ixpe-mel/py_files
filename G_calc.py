@@ -59,7 +59,7 @@ def G_calc(mod_min, mod_max,data_1,lc_ref,GTI,bin_length, seg_length, fmin, fmax
     
     # Extract the real and imaginary parts of the power spectrum
     G_real = cs.power.real[(fmin <= cs.freq) & (cs.freq <= fmax)].mean()
-    print('G_real',G_real)
+    #print('G_real',G_real)
     G_im = cs.power.imag[(fmin <= cs.freq) & (cs.freq <= fmax)].mean()
 
     n=len(cs.power.real[(fmin<=cs.freq) & (cs.freq<=fmax)]) #number of datapoints of power spectrum in frequency range
