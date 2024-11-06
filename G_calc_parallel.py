@@ -16,13 +16,16 @@ def G_calc(mod_min, mod_max,data_1_times,data_1_phi,data_1_qsp,data_1_usp,
     #print('start')
     #print(np.degrees(mod_min),np.degrees(mod_max))
     data_1=[data_1_times,data_1_qsp,data_1_usp]
+    #print('times',data_1[0])
+    #print('qsp',data_1[1])
+    #print('usp',data_1[2])
     av_mod=np.mean([mod_min,mod_max])
     #data_phi=data_1['PHI']
     #print(len(data_phi))   
     data_bin = [arr[(mod_min <= data_1_phi) & (data_1_phi <= mod_max)] for arr in data_1]
     time_bin = data_bin[0]
 
-    #print(time_bin)
+    #print('time bin',time_bin)
     #print(GTI)
        # Create the lightcurve
     lc = Lightcurve.make_lightcurve(time_bin, dt=bin_length, gti=GTI)
@@ -57,12 +60,28 @@ def G_calc(mod_min, mod_max,data_1_times,data_1_phi,data_1_qsp,data_1_usp,
         #print('Not subtracting spurious polarisation...')
         lc_subject=lc
 
-
+    #print('lc_subject',lc_subject)
+    #print('lc_ref',lc_ref)
     # Create averaged cross spectrum
     cs = AveragedCrossspectrum.from_lightcurve(lc_subject, lc_ref, seg_length, norm='frac')
-    
-    # Extract the real and imaginary parts of the power spectrum
+    #print('real',cs.power.real)
+    #print('imag',cs.power.imag)
+    #print('freq',cs.freq)
+    #print('fmin',fmin)
+    #print('fmax',fmax)
+    index=[(fmin <= cs.freq) & (cs.freq <= fmax)]
+    #print('index',index)
+
+
+    #print("cs.freq:", cs.freq)
+    #print("cs.power.real:", cs.power.real)
+    #print("Selected freq range:", cs.freq[(fmin <= cs.freq) & (cs.freq <= fmax)])
+    #print("Mean of selected power values:", cs.power.real[(fmin <= cs.freq) & (cs.freq <= fmax)])
+
+    #np.savetxt('/home/c2032014/Inject_signal/freq_test.txt',cs.freq)
     G_real = cs.power.real[(fmin <= cs.freq) & (cs.freq <= fmax)].mean()
+    # Extract the real and imaginary parts of the power spectrum
+   
     #print('G_real',G_real)
     G_im = cs.power.imag[(fmin <= cs.freq) & (cs.freq <= fmax)].mean()
 
