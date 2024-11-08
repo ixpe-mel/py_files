@@ -74,3 +74,4 @@ def dG_span(mod_bin_number,
         #for i in zip(mod_min_array,mod_max_array,lc_subject_span,G_real_span,G_im_span):
         #    result.append(partial_dG_calc(i[0],i[1],i[2],i[3],i[4]))
         result = [partial_dG_calc(min_val, max_val, span,real,im) for min_val, max_val, span ,real,im in zip(mod_min_array, mod_max_array, lc_subject_span,G_real_span,G_im_span)]
+    return result
