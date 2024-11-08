@@ -50,6 +50,7 @@ def dG_span(mod_bin_number,G_real,G_im,lc_subject,lc_1_ref,lc_2_ref,data_2,n,m,f
     #print('mod_min_array',mod_min_array)
         partial_dG_calc_VEC = np.vectorize(partial_dG_calc,otypes=[object])
         result= partial_dG_calc_VEC(mod_min_array, mod_max_array,lc_subject)
+    return result
 
     #print('mod_max_array',mod_max_array)
 
