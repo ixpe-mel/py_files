@@ -1,5 +1,6 @@
 #Generates the chi square value of a fit from the real data, the fit and the associated error on the real data points 
 
+import numpy as np
 def chi_square(data,fit,error):
     chi_square = np.sum( ( ( (data - fit)**2)/error**2)  ) #from classic chi sqr test
     return chi_square
