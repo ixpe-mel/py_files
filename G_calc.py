@@ -8,19 +8,17 @@ import importlib
 warnings.filterwarnings('ignore')
 
 
-def G_calc(mod_min, mod_max,data_1,lc_ref,GTI,bin_length, seg_length, fmin, fmax,mod_bin_number,spur_sub,coherence_corrector):
+def G_calc(mod_min, mod_max,data_1,lc_ref,GTI,bin_length, seg_length, fmin, fmax,mod_bin_number,spur_sub):
     """ Process a single modulation angle range and return the averaged real and imaginary power. """
     # Filter data for the current modulation angle range
-    print('start')
-    print(np.degrees(mod_min),np.degrees(mod_max))
+
     av_mod=np.mean([mod_min,mod_max])
     data_phi=data_1['PHI']
     #print(len(data_phi))   
     data_bin = data_1[(mod_min <= data_phi) & (data_phi <= mod_max)]
     time_bin = data_bin['TIME']
-    #print(time_bin)
-    #print(GTI)
-       # Create the lightcurve
+
+       # Create the Subject band lightcurve
     lc = Lightcurve.make_lightcurve(time_bin, dt=bin_length, gti=GTI)
     lc.apply_gtis()
     lc_countrate=lc.meanrate
@@ -28,7 +26,7 @@ def G_calc(mod_min, mod_max,data_1,lc_ref,GTI,bin_length, seg_length, fmin, fmax
    
 
     if spur_sub==True:
-        #print('Subtracting spurious polarisation...')
+        print('Subtracting spurious polarisation...')
         q_spur_1=data_bin['QSP'] # per event spurious stokes parameters for mod bin of interest
         u_spur_1=data_bin['USP']
 
