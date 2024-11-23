@@ -4,31 +4,14 @@ import Ingram_2019_errors as I_19errs
 import importlib
 import lc_spurious_sub as lcss
 importlib.reload(I_19errs)
-def dG_calc(mod_min,mod_max,lc_subject,G_real,G_im,n,m,data_2,fmin,fmax,seg_length,bin_length,GTI,ps_2_mean,cs_ref_real_mean,coherence_corrector=True,spurious_sub=True):
-    #print(lc_subject)
-    av_mod=(mod_min+mod_max)/2
-    #lightcurve_2=Lightcurve.make_lightcurve(data_2['TIME'],dt=bin_length,gti=GTI)
-    #lightcurve_2.apply_gtis()
-    #lightcurve_2_countrate2=lightcurve_2.meanrate
-    #lightcurve_2=lcss.lc_spur_sub(data_2,lightcurve_2_countrate2,mod_bin_number,av_mod,bin_length,lightcurve_2)
-    
-    #print('cs_ref_real_mean',cs_ref_real_mean)
+def dG_calc(lc_subject,G_real,G_im,n,m,fmin,fmax,seg_length,ps_2_mean,cs_ref_real_mean,coherence_corrector):
 
     if coherence_corrector==True:
         print('Applying coherence correction')
-        #print('Applying coherence correction...')
-        dG=I_19errs.ingr_2019_errs_cc(mod_min,mod_max,G_real,G_im,lc_subject,cs_ref_real_mean,data_2,ps_2_mean,n,m,fmin,fmax,seg_length,bin_length,GTI,spurious_sub=True)
- #   elif coherence_corrector==True and spurious_sub==False:
- #       print('Applying coherence correction BUT NO SPUR SUB...')
- #       dG=I_19errs.ingr_2019_errs_cc(mod_min,mod_max,G_real,G_im,lc_subject,cs_ref_real_mean,data_2,ps_2_mean,n,m,fmin,fmax,seg_length,bin_length,GTI,spurious_sub=False)
+        dG=I_19errs.ingr_2019_errs_cc(G_real,G_im,lc_subject,cs_ref_real_mean,ps_2_mean,n,m,fmin,fmax,seg_length)
 
- #   elif coherence_corrector==False and spurious_sub==True:
- #       print('Applying no coherence correction but spurious sub...')
- #       dG=I_19errs.ingr_2019_errs(real_G=G_real,im_G=G_im,lc_subject=lc_subject,cs_ref_real_mean=cs_ref_real_mean,ps_2_mean=ps_2_mean,n=n,m=m,fmin=fmin,fmax=fmax,seg_length=seg_length,bin_length=bin_length,GTI=GTI,spurious_sub=True)
     else:
         print('Applying no coherence correction...')
-        dG=I_19errs.ingr_2019_errs(real_G=G_real,im_G=G_im,lc_subject=lc_subject,cs_ref_real_mean=cs_ref_real_mean,ps_2_mean=ps_2_mean,n=n,m=m,fmin=fmin,fmax=fmax,seg_length=seg_length,bin_length=bin_length,GTI=GTI,spurious_sub=False)
+        dG=I_19errs.ingr_2019_errs(real_G=G_real,im_G=G_im,lc_subject=lc_subject,cs_ref_real_mean=cs_ref_real_mean,ps_2_mean=ps_2_mean,n=n,m=m,fmin=fmin,fmax=fmax,seg_length=seg_length)
 
-    #print('dG',dG)
-        #dG=I_19errs.ingr_2019_errs(G_real,G_im,lc_subject,ps_2_mean,n,m,fmin,fmax,seg_length,bin_length,GTI)
     return dG
