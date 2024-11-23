@@ -360,6 +360,13 @@ def PD_PA_PHASE(ixpe_event_file_DU1,
         
     PD_array=[100*i for i in PD_array]
     dPD_array=[100*i for i in dPD_array]
+
+    mean_PD=np.mean(PD_array)
+    mean_dPD=np.mean(dPD_array)
+    mean_PA=np.mean(PA_array)
+    mean_dPA=np.mean(dPA_array)
+    print('Mean PD',mean_PD)
+    print('Mean PA',mean_PA)
     
     plt.figure()
     plt.title('I vs phase')
