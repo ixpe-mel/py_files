@@ -5,7 +5,7 @@ import numpy as np
 from functools import partial
 import importlib
 importlib.reload(Gc)
-def G_span(mod_bin_number,data_1,lc_ref,GTI,bin_length, seg_length, fmin, fmax,spur_sub=True,coherence_corrector=True):
+def G_span(mod_bin_number,data_1,lc_ref,GTI,bin_length, seg_length, fmin, fmax,spur_sub):
 
     #create modulation angle bins
     mod_min_global = np.radians(-90)
@@ -19,7 +19,7 @@ def G_span(mod_bin_number,data_1,lc_ref,GTI,bin_length, seg_length, fmin, fmax,s
     #print('mod_min_array',mod_min_array)
     #print('mod_max_array',mod_max_array)
     #Make partial function
-    partial_G_calc = partial(Gc.G_calc, data_1=data_1,lc_ref=lc_ref,GTI=GTI,bin_length=bin_length, seg_length=seg_length, fmin=fmin, fmax=fmax,mod_bin_number=mod_bin_number,spur_sub=spur_sub,coherence_corrector=coherence_corrector)
+    partial_G_calc = partial(Gc.G_calc, data_1=data_1,lc_ref=lc_ref,GTI=GTI,bin_length=bin_length, seg_length=seg_length, fmin=fmin, fmax=fmax,mod_bin_number=mod_bin_number,spur_sub=spur_sub)
     
     #vectorize real/im calculator
     partial_G_calc_VEC = np.vectorize(partial_G_calc,otypes=[object])
