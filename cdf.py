@@ -25,7 +25,8 @@ def modulation_angle_generator(CDF0,muPD,PA,phimin,phimax):#,spur_sub,qsp,usp,mu
     #cdf_NR=lambda phi: ( ( (1/(2*np.pi)) * ( (2*phi) + np.pi + muPD * (-np.sin(2*PA) + np.sin( (2*phi)-(2*PA) ) ) ) ) - CDF0 )
     cdf_NR_PA0=lambda phi:( ( (1/(2*np.pi)) * ( (2*phi) + np.pi + muPD * ( + np.sin( (2*phi) ) ) ) ) - CDF0 )
     #NR_root=optimize.newton(cdf_NR,x0=initial_guess,fprime=mod_function,fprime2=mod_function_derivative,tol=10e-4,maxiter=10000000000000000000)
-    NR_root_PA0=optimize.newton(cdf_NR_PA0,x0=initial_guess,fprime=mod_function,fprime2=mod_function_derivative,tol=10e-10,maxiter=10000000000000000000)
+    NR_root_PA0,rr=optimize.newton(cdf_NR_PA0,x0=initial_guess,fprime=mod_function,fprime2=mod_function_derivative,tol=10e-6,maxiter=100000,disp=False,full_output=True)
+    #print(rr.converged)
     #NR_root_PA0=optimize.newton(cdf_NR_PA0,x0=initial_guess,fprime=mod_function,fprime2=mod_function_derivative,tol=10e-1,maxiter=10000000)
     #print(NR_root_PA0)
     #print(result_conv)
@@ -76,5 +77,5 @@ def modulation_angle_generator(CDF0,muPD,PA,phimin,phimax):#,spur_sub,qsp,usp,mu
 #print('Modulation angle calculated (deg):',np.degrees(NR_root_PA0))
 #print(NR_root_PA0)
 #np.save('/home/c2032014/converge_info.npy',NR_root_conv)
-    return NR_root_PA0#,result_conv
+    return NR_root_PA0,rr
 
