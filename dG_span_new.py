@@ -11,7 +11,7 @@ importlib.reload(dGc)
 def dG_span(G_real_span,G_im_span,
             lc_subject_span,n_span,m_span,
             fmin,fmax,seg_length,ps_2_mean,cs_ref_real_mean,
-            coherence_corrector):
+            coherence_corrector,norm='frac'):
 
     #create modulation angle bins
     #mod_min_global = np.radians(-90)
@@ -22,14 +22,14 @@ def dG_span(G_real_span,G_im_span,
     #mod_max_array = aspace[1:]
     #av_mod = (mod_min_array + mod_max_array) / 2
     #av_mod_err = (mod_max_array - mod_min_array) / 2
-    print('greoig')
+    #print('greoig')
     result=[]
     if coherence_corrector==True:
         #print(n_span[0])
         #print('Applying coherence correction and spurious sub...')
         partial_dG_calc=partial(dGc.dG_calc,n=n_span[0],m=m_span[0],fmin=fmin,fmax=fmax,
                                 seg_length=seg_length,
-                                ps_2_mean=ps_2_mean,cs_ref_real_mean=cs_ref_real_mean,coherence_corrector=True)
+                                ps_2_mean=ps_2_mean,cs_ref_real_mean=cs_ref_real_mean,coherence_corrector=True,norm=norm)
 #mod_min,mod_max,lc_subject,G_real,G_im,lc_2_ref,data_2,n,m,fmin,fmax,seg_length,bin_length,mod_bin_number,GTI,ps_2_mean,cs_ref_real_mean,coherence_corrector=True,spurious_sub=True):
         
         result = [partial_dG_calc(span,real,im) for span ,real,im,  in zip( lc_subject_span,G_real_span,G_im_span)]
@@ -69,7 +69,7 @@ def dG_span(G_real_span,G_im_span,
         partial_dG_calc=partial(dGc.dG_calc, n=n_span[0],m=m_span[0],fmin=fmin,fmax=fmax,
                                 seg_length=seg_length,ps_2_mean=ps_2_mean,
                                 cs_ref_real_mean=cs_ref_real_mean,
-                                coherence_corrector=False)
+                                coherence_corrector=False,norm=norm)
         #for i in zip(mod_min_array,mod_max_array,lc_subject_span,G_real_span,G_im_span):
         #    result.append(partial_dG_calc(i[0],i[1],i[2],i[3],i[4]))
         result = [partial_dG_calc( span,real,im) for span ,real,im in zip( lc_subject_span,G_real_span,G_im_span)]
