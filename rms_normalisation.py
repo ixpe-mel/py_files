@@ -2,7 +2,7 @@ import numpy as np
 from stingray import Lightcurve, AveragedCrossspectrum
 
 #calculate the normalisation of fractional frac_rms
-def rms_normalisation(data_12,data_3,bin_length,seg_length,fmin,fmax,gti):
+def rms_normalisation(data_12,data_3,bin_length,seg_length,fmin,fmax,gti,norm='frac'):
         
         GTI=list(np.loadtxt(str(gti)))
         data_12_times = data_12['TIME']
@@ -13,7 +13,7 @@ def rms_normalisation(data_12,data_3,bin_length,seg_length,fmin,fmax,gti):
         lc_ref=Lightcurve.make_lightcurve(data_3['TIME'],dt=bin_length,gti=GTI)
         lc_ref.apply_gtis()
 
-        avg_cs = AveragedCrossspectrum.from_lightcurve(lightcurve_12,lc_ref,seg_length,norm='frac')
+        avg_cs = AveragedCrossspectrum.from_lightcurve(lightcurve_12,lc_ref,seg_length,norm=norm)
         del lightcurve_12
 
         av_power_norm_real=avg_cs.power.real[(fmin<=avg_cs.freq) & (avg_cs.freq<=fmax)].mean()
