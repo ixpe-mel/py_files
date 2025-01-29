@@ -31,11 +31,23 @@ def G_calc(mod_min, mod_max,data_1_times,data_1_phi,data_1_qsp,data_1_usp,
     lc = Lightcurve.make_lightcurve(time_bin, dt=bin_length, gti=GTI)
     lc.apply_gtis()
     lc_countrate=lc.meanrate
+    mod_bin_width=(mod_max-mod_min)
+    T=lc.time[-1] - lc.time[0]
+
+    q_spur_1_TOT=data_1_qsp # all events
+    u_spur_1_TOT=data_1_usp
+
+    Q_spur_1_TOT=np.sum(q_spur_1_TOT) # equivelent to big q
+    U_spur_1_TOT=np.sum(u_spur_1_TOT) #equivalent to big u
+    I_TOT=len(q_spur_1_TOT) # equivelent to I or N
+
+    Q_spur_1_norm_TOT=np.sum(q_spur_1_TOT)/I_TOT #define normalised spur stokes 
+    U_spur_1_norm_TOT=np.sum(u_spur_1_TOT)/I_TOT
 
    
 
     if spur_sub==True:
-        #print('Subtracting spurious polarisation...')
+        print('Subtracting spurious polarisation...')
         q_spur_1=data_bin[1] # per event spurious stokes parameters for mod bin of interest
         u_spur_1=data_bin[2]
 
@@ -46,8 +58,12 @@ def G_calc(mod_min, mod_max,data_1_times,data_1_phi,data_1_qsp,data_1_usp,
         Q_spur_1_norm=np.sum(q_spur_1)/I #define normalised spur stokes 
         U_spur_1_norm=np.sum(u_spur_1)/I
             
-            
-        spur_sub=((lc_countrate/mod_bin_number)* ((Q_spur_1_norm*np.cos((2*av_mod)))+(U_spur_1_norm*np.sin(((2*av_mod))))))*(bin_length) #assumes qsm,usm const over time
+        #2nd VARIATION
+        spur_sub=(bin_length/T)*(mod_bin_width/np.pi)*((Q_spur_1_norm_TOT*np.cos(2*av_mod)) +(U_spur_1_norm_TOT*np.sin( 2*av_mod  )))
+        
+        
+        
+        # ORIGINAL spur_sub=((lc_countrate/mod_bin_number)* ((Q_spur_1_norm*np.cos((2*av_mod)))+(U_spur_1_norm*np.sin(((2*av_mod))))))*(bin_length) #assumes qsm,usm const over time
         spur_sub_counts=[spur_sub]*len(lc.time)
         lc_spur=Lightcurve(lc.time,spur_sub_counts)                                
         lc_counts_subtracted=lc.counts-spur_sub_counts #subtracting spur lc
