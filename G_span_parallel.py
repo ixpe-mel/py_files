@@ -22,7 +22,7 @@ def G_span(mod_min,mod_max,mod_bin_number,data_1_times,data_1_phi,data_1_qsp,dat
     partial_G_calc = partial(Gcp.G_calc, 
                              data_1_times=data_1_times,data_1_phi=data_1_phi,data_1_qsp=data_1_qsp,data_1_usp=data_1_usp,
                              lc_ref=lc_ref,GTI=GTI,bin_length=bin_length, seg_length=seg_length, fmin=fmin, fmax=fmax,mod_bin_number=mod_bin_number,spur_sub=spur_sub,coherence_corrector=coherence_corrector)
-    
+
     #vectorize real/im calculator
     partial_G_calc_VEC = np.vectorize(partial_G_calc,otypes=[object])
 

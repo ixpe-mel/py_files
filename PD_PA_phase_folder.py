@@ -23,6 +23,7 @@ def PD_PA_PHASE(ixpe_event_file_DU1,
     with fits.open(ixpe_event_file_DU1) as hdu:
         EVENTS_DU1=hdu[1].data
         EVENTS_DU1=EVENTS_DU1[(Pmin<=EVENTS_DU1['PI']) & (EVENTS_DU1['PI']<= Pmax)]
+        EVENTS_DU1=EVENTS_DU1[EVENTS_DU1['QUAL']==1]
         header=hdu[1].header
         TSTART=header['TSTART']
         W_MOM_DU1=list(EVENTS_DU1['W_MOM'])
@@ -56,6 +57,7 @@ def PD_PA_PHASE(ixpe_event_file_DU1,
     with fits.open(ixpe_event_file_DU2) as hdu:
         EVENTS_DU2=hdu[1].data
         EVENTS_DU2=EVENTS_DU2[(Pmin<=EVENTS_DU2['PI']) & (EVENTS_DU2['PI']<= Pmax)]
+        EVENTS_DU2=EVENTS_DU2[EVENTS_DU2['QUAL']==1]
         GTI_DU2=hdu[2].data
         
         W_MOM_DU2=EVENTS_DU2['W_MOM']
@@ -89,6 +91,7 @@ def PD_PA_PHASE(ixpe_event_file_DU1,
     with fits.open(ixpe_event_file_DU3) as hdu:
         EVENTS_DU3=hdu[1].data
         EVENTS_DU3=EVENTS_DU3[(Pmin<=EVENTS_DU3['PI']) & (EVENTS_DU3['PI']<= Pmax)]
+        EVENTS_DU3=EVENTS_DU3[EVENTS_DU3['QUAL']==1]
         GTI_DU3=hdu[2].data
         
         W_MOM_DU3=EVENTS_DU3['W_MOM']
@@ -127,13 +130,13 @@ def PD_PA_PHASE(ixpe_event_file_DU1,
     
     
     #MRF
-    with fits.open(response_dir+'/mrf/ixpe_d1_20170101_alpha075_05.mrf') as hdu:
+    with fits.open(response_dir+'/mrf/ixpe_d1_20170101_05.mrf') as hdu:
         SPECRESP_MRF_DU1=hdu[1].data
         Aeff_mu_E_DU1=SPECRESP_MRF_DU1['SPECRESP']
         #print(Aeff_mu_E_DU1[0][0])
         
     #ARF
-    with fits.open(response_dir+'/arf/ixpe_d1_20170101_alpha075_05.arf') as hdu:
+    with fits.open(response_dir+'/arf/ixpe_d1_20170101_05.arf') as hdu:
         SPECRESP_ARF_DU1=hdu[1].data
         Aeff_E_DU1=SPECRESP_ARF_DU1['SPECRESP']
         
@@ -145,13 +148,13 @@ def PD_PA_PHASE(ixpe_event_file_DU1,
         #DU2 RESPONSE FILES
     
     #MRF
-    with fits.open(response_dir+'/mrf/ixpe_d2_20170101_alpha075_05.mrf') as hdu:
+    with fits.open(response_dir+'/mrf/ixpe_d2_20170101_05.mrf') as hdu:
         SPECRESP_MRF_DU2=hdu[1].data
         Aeff_mu_E_DU2=SPECRESP_MRF_DU2['SPECRESP']
         
         
     #ARF
-    with fits.open(response_dir+'/arf/ixpe_d2_20170101_alpha075_05.arf') as hdu:
+    with fits.open(response_dir+'/arf/ixpe_d2_20170101_05.arf') as hdu:
         SPECRESP_ARF_DU2=hdu[1].data
         Aeff_E_DU2=SPECRESP_ARF_DU2['SPECRESP']
         
@@ -159,11 +162,11 @@ def PD_PA_PHASE(ixpe_event_file_DU1,
         
             #DU3 RESPONSE FILES
     #MRF
-    with fits.open(response_dir+'/mrf/ixpe_d3_20170101_alpha075_05.mrf') as hdu:
+    with fits.open(response_dir+'/mrf/ixpe_d3_20170101_05.mrf') as hdu:
         SPECRESP_MRF_DU3=hdu[1].data
         Aeff_mu_E_DU3=SPECRESP_MRF_DU3['SPECRESP']
     #ARF
-    with fits.open(response_dir+'/arf/ixpe_d3_20170101_alpha075_05.arf') as hdu:
+    with fits.open(response_dir+'/arf/ixpe_d3_20170101_05.arf') as hdu:
         SPECRESP_ARF_DU3=hdu[1].data
         Aeff_E_DU3=SPECRESP_ARF_DU3['SPECRESP']
         
@@ -177,7 +180,7 @@ def PD_PA_PHASE(ixpe_event_file_DU1,
     # Define the parameters
 
     phase_minimum = 0  # Minimum modulation angle in degrees
-    phase_maximum = 2*np.pi  # Maximum modulation angle in degrees
+    phase_maximum = 1  # Maximum modulation angle in degrees
 
     bspace = np.linspace((phase_minimum), (phase_maximum), phase_bin_number + 1)
     phase_bin_list = [(bspace[i - 1], bspace[i]) for i in range(1, len(bspace))]
@@ -196,21 +199,22 @@ def PD_PA_PHASE(ixpe_event_file_DU1,
     #v_double_dot=-8*10**-18
     #t_0=1.9393835*10**8
     
-    
-    
+   
     #Her X-1
     #v=0.8079478799630468
     #v=1/1.2377093
     #v_dot=0
     #v_double_dot=0
     #t_0=TSTART
-    
+     
+
     phase_DU1=phase.phase_v_double_dot(v,v_dot,v_double_dot,np.array(TIMES_DU1),t_0)
     
     phase_DU2=phase.phase_v_double_dot(v,v_dot,v_double_dot,np.array(TIMES_DU2),t_0)
     
     phase_DU3=phase.phase_v_double_dot(v,v_dot,v_double_dot,np.array(TIMES_DU3),t_0)
     
+    print('phase du1',phase_DU1)
     
     PD_array=[]
     dPD_array=[]
@@ -221,20 +225,21 @@ def PD_PA_PHASE(ixpe_event_file_DU1,
     I_array=[]
     
     #phase_plot=[]
-    
+    print(Aeff_mu_E_DU1)
+    print(Aeff_E_DU1)
     for i in phase_bin_list:
         phase_min=i[0]
         phase_max=i[1]
         
         
        
-        # Selecting photons within modulation angle bin range
+        # Selecting photons within phase bin range
         W_MOM_DU1_phase_cut=W_MOM_DU1[(phase_min<=phase_DU1) & (phase_DU1<=phase_max)]
         PI_DU1_phase_cut=PI_DU1[(phase_min<=phase_DU1) & (phase_DU1<=phase_max)]
         q_1_phase_cut=q_1[(phase_min<=phase_DU1) & (phase_DU1<=phase_max)]
         u_1_phase_cut=u_1[(phase_min<=phase_DU1) & (phase_DU1<=phase_max)]
                           
-                        
+        #print('number of photons in phase bin',len(W_MOM_DU1_phase_cut))
         W_MOM_DU2_phase_cut=W_MOM_DU2[(phase_min<=phase_DU2) & (phase_DU2<=phase_max)]
         PI_DU2_phase_cut=PI_DU2[(phase_min<=phase_DU2) & (phase_DU2<=phase_max)]
         q_2_phase_cut=q_2[(phase_min<=phase_DU2) & (phase_DU2<=phase_max)]
@@ -278,15 +283,26 @@ def PD_PA_PHASE(ixpe_event_file_DU1,
 
 
         # Stokes Q
-
+        print(W_MOM_DU1_phase_cut)
+        print(q_1_phase_cut)
+        print(Aeff_event_DU1)  #these two are different for analytic and pd pa phase fold
+        print(Aeff_mu_event_DU1)
             #DU1
         Q_NEFF_1_phase_cut=np.sum( (W_MOM_DU1_phase_cut*q_1_phase_cut) / Aeff_mu_event_DU1)
+        #print('Q_NEFF_1_phase_cut',Q_NEFF_1_phase_cut)
         dQ_NEFF_1_sqrd_phase_cut=np.sum( ( (W_MOM_DU1_phase_cut*q_1_phase_cut)/Aeff_event_DU1 )**2 )
+
+        dQ_NEFF_1_sqrd_phase_cut=np.sum( ( (W_MOM_DU1_phase_cut*q_1_phase_cut)/Aeff_event_DU1 )**2 )
+
             #DU2
         Q_NEFF_2_phase_cut=np.sum( (W_MOM_DU2_phase_cut*q_2_phase_cut) / Aeff_mu_event_DU2)
         dQ_NEFF_2_sqrd_phase_cut=np.sum( ( (W_MOM_DU2_phase_cut*q_2_phase_cut)/Aeff_event_DU2 )**2 )
+
+        dQ_NEFF_2_sqrd_phase_cut=np.sum( ( (W_MOM_DU2_phase_cut*q_2_phase_cut)/Aeff_event_DU2 )**2 )
             #DU3
         Q_NEFF_3_phase_cut=np.sum( (W_MOM_DU3_phase_cut*q_3_phase_cut) / Aeff_mu_event_DU3)
+        dQ_NEFF_3_sqrd_phase_cut=np.sum( ( (W_MOM_DU3_phase_cut*q_3_phase_cut)/Aeff_event_DU3 )**2 )
+
         dQ_NEFF_3_sqrd_phase_cut=np.sum( ( (W_MOM_DU3_phase_cut*q_3_phase_cut)/Aeff_event_DU3 )**2 )
             #TOT
             
@@ -305,14 +321,20 @@ def PD_PA_PHASE(ixpe_event_file_DU1,
 
        # Stokes U 
             #DU1
-        U_NEFF_1_phase_cut=np.sum( (W_MOM_DU1_phase_cut*u_1_phase_cut) / Aeff_mu_event_DU1)
+        U_NEFF_1_phase_cut=np.sum( (W_MOM_DU1_phase_cut*u_1_phase_cut )/ Aeff_mu_event_DU1)
+        dU_NEFF_1_sqrd_phase_cut=np.sum( ( (W_MOM_DU1_phase_cut*u_1_phase_cut)/Aeff_event_DU1 )**2 )
+
         dU_NEFF_1_sqrd_phase_cut=np.sum( ( (W_MOM_DU1_phase_cut*u_1_phase_cut)/Aeff_event_DU1 )**2 )
             #DU2
         U_NEFF_2_phase_cut=np.sum( (W_MOM_DU2_phase_cut*u_2_phase_cut) / Aeff_mu_event_DU2)
         dU_NEFF_2_sqrd_phase_cut=np.sum( ( (W_MOM_DU2_phase_cut*u_2_phase_cut)/Aeff_event_DU2 )**2 )
+
+        dU_NEFF_2_sqrd_phase_cut=np.sum( ( (W_MOM_DU2_phase_cut*u_2_phase_cut)/Aeff_event_DU2 )**2 )
             #DU3
         U_NEFF_3_phase_cut=np.sum( (W_MOM_DU3_phase_cut*u_3_phase_cut) / Aeff_mu_event_DU3)
         dU_NEFF_3_sqrd_phase_cut=np.sum( ( (W_MOM_DU3_phase_cut*u_3_phase_cut)/Aeff_event_DU3 )**2 )
+
+        dU_NEFF_3_sqrd_phase_cut=np.sum( ( (W_MOM_DU3_phase_cut*u_3_phase_cut)/Aeff_event_DU3)**2 )
         
         
         

@@ -21,7 +21,7 @@ def phase_v_double_dot(v,v_dot,v_double_dot,t,t_0):
     #print(v_dot)
     phi=( (v*(t-t_0)) + (1/2)*(v_dot)*(t-t_0)**2 + (1/6)*(v_double_dot)*(t-t_0)**3 )
     phi=phi%1
-    phi=2*np.pi*phi
+    #phi=2*np.pi*phi
     return phi    
  #v is the taylor expansion of v(t) approx v|t=to +vdot|t=to *(t-t0) +vdoubledot/2 * (t-t0)**2
  

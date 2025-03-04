@@ -26,8 +26,8 @@ def G_span(mod_bin_number,data_1,lc_ref,GTI,bin_length, seg_length, fmin, fmax,s
 
     # Get the real and imaginary parts of the power spectrum for the current modulation range
     result= partial_G_calc_VEC(mod_min_array, mod_max_array)#,data_1, lc_ref,GTI,bin_length, seg_length, fmin, fmax,spur_sub)
-    G_real, G_im, n, m, lc_subject,lc_spur,cs= zip(*result)
+    G_real, G_im, n, m, lc_subject,lc_spur,cs,spur_sub_norm= zip(*result)
     #cs_err_sr_real,cs_err_sr_im ,cs= zip(*result)
-    return G_real, G_im, n, m,lc_subject,lc_spur,cs
+    return G_real, G_im, n, m,lc_subject,lc_spur,cs,spur_sub_norm
 #,lc_sub
 #,cs_err_sr_real,cs_err_sr_im,cs
