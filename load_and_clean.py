@@ -3,6 +3,7 @@ from astropy.io import fits
 def load_and_clean(file, Pmin, Pmax):
     with fits.open(str(file)) as hdu:
                 data=hdu[1].data
+                print('num of events',len(data['PI']))
                 GTI=hdu[2].data
                 GTI_header=hdu[2].header
                 header=hdu[1].header

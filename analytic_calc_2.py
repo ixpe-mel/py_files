@@ -248,8 +248,10 @@ def Analytic_model_rms_phase(source_name,file_1,file_2,
     print('Frac rms of C(\gamma) fundamental:',I_ps_frac_rms)
 
 
-     #New fudge 
+     #New fudge
+    #rms_ratio=
     rms_ratio=0.28520197995386165/I_ps_frac_rms #rxj estimate
+    ##rms_ratio=0.88256
     print('rxj rms ratio:',rms_ratio)
     #rms_ratio=1.2847  #herx1 estimate
     print('rms ratio:',rms_ratio)
