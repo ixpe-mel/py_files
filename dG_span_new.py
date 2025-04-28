@@ -29,7 +29,7 @@ def dG_span(G_real_span,G_im_span,
         #print('Applying coherence correction and spurious sub...')
         partial_dG_calc=partial(dGc.dG_calc,n=n_span[0],m=m_span[0],fmin=fmin,fmax=fmax,
                                 seg_length=seg_length,
-                                ps_2_mean=ps_2_mean,cs_ref_real_mean=cs_ref_real_mean,coherence_corrector=True,norm=norm)
+                                ps_2_mean=ps_2_mean,cs_ref_real_mean=cs_ref_real_mean,coherence_corrector=True,norm='frac')
 #mod_min,mod_max,lc_subject,G_real,G_im,lc_2_ref,data_2,n,m,fmin,fmax,seg_length,bin_length,mod_bin_number,GTI,ps_2_mean,cs_ref_real_mean,coherence_corrector=True,spurious_sub=True):
         
         result = [partial_dG_calc(span,real,im) for span ,real,im,  in zip( lc_subject_span,G_real_span,G_im_span)]
@@ -69,7 +69,7 @@ def dG_span(G_real_span,G_im_span,
         partial_dG_calc=partial(dGc.dG_calc, n=n_span[0],m=m_span[0],fmin=fmin,fmax=fmax,
                                 seg_length=seg_length,ps_2_mean=ps_2_mean,
                                 cs_ref_real_mean=cs_ref_real_mean,
-                                coherence_corrector=False,norm=norm)
+                                coherence_corrector=False,norm='frac')
         #for i in zip(mod_min_array,mod_max_array,lc_subject_span,G_real_span,G_im_span):
         #    result.append(partial_dG_calc(i[0],i[1],i[2],i[3],i[4]))
         result = [partial_dG_calc( span,real,im) for span ,real,im in zip( lc_subject_span,G_real_span,G_im_span)]
