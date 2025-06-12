@@ -18,3 +18,18 @@ def calculate_stokes(W_MOM_phase_cut, q_phase_cut, u_phase_cut, Aeff_event, Aeff
     dU_NEFF_sqrd = np.sum(((W_MOM_phase_cut * u_phase_cut) / Aeff_event) ** 2)
 
     return I_NEFF, np.sqrt(dI_NEFF_sqrd), Q_NEFF, np.sqrt(dQ_NEFF_sqrd), U_NEFF, np.sqrt(dU_NEFF_sqrd)
+
+def calculate_stokes_uncorrected(W_MOM_phase_cut, q_phase_cut, u_phase_cut, Aeff_event):
+    """
+    Calculate the Stokes parameters without correction of mue.
+    """
+    #I_NEFF = np.sum(W_MOM_phase_cut / Aeff_event)
+    #dI_NEFF_sqrd = np.sum((W_MOM_phase_cut / Aeff_event) ** 2)
+
+    Q_NEFF = np.sum(W_MOM_phase_cut * q_phase_cut/Aeff_event)
+    #dQ_NEFF_sqrd = np.sum((W_MOM_phase_cut * q_phase_cut) ** 2)
+
+    U_NEFF = np.sum(W_MOM_phase_cut * u_phase_cut/Aeff_event)
+    #dU_NEFF_sqrd = np.sum((W_MOM_phase_cut * u_phase_cut) ** 2)
+
+    return  Q_NEFF, U_NEFF
