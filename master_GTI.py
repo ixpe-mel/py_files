@@ -28,8 +28,10 @@ def master_GTI(data1,data2,data3,output_file):
         ngti3=len(GTI3)
 
 
-    
-    
+    print(TSTOP1)
+    #print(len(gtistart1))
+    #print(len(gtistart2))
+    #print(len(gtistart3))
     
     
     beep=0
@@ -39,11 +41,18 @@ def master_GTI(data1,data2,data3,output_file):
     i3 = 0
     gtistart=[]
     gtiend=[]
-    
-    while TSTOP1 - beep > 1e-6:  #while the beep indexer isnt the end of the observation:
-        
+    #gtiend[counter+1]>gtiend[counter]
+    while TSTOP1 - beep > 1e-6 :  #while the beep indexer isnt the end of the observation:
+        #print('i1 {}'.format(i1))
+        #print('i2 {}'.format(i2))
+       
+
+        #print('i3 {}'.format(i3))
+        #print('gtistart1 i1',gtistart1[i1])
+        #print('gtistart2 i2',gtistart2[i2])
+        #print('gtistart3 i3',gtistart3[i3])
         gtistart.append(max(gtistart1[i1], gtistart2[i2], gtistart3[i3])) #defining start of current master GTI
-        print('gti start {}'.format(gtistart[counter]))
+        #print('gti start {}'.format(gtistart[counter]))
        # print('gti end {}'.format(gtiend))
         gtiend.append(0)
         #print('gti end {}'.format(gtiend))
@@ -76,15 +85,20 @@ def master_GTI(data1,data2,data3,output_file):
         #moving to the next current du gti if it has an end before the master end
         
         
-        if gtiend1[i1] - gtiend[counter] < 1e-6 and i1<ngti1:
+        if gtiend1[i1] - gtiend[counter] < 1e-6 and i1<ngti1-1:
+            
             i1 = i1 + 1
         else:
             None
-        if gtiend2[i2] - gtiend[counter] < 1e-6 and i2<ngti2:
+        if gtiend2[i2] - gtiend[counter] < 1e-6 and i2<ngti2-1:
+            #print('i2',i2)
+            #print('ngti2',ngti2)
+            #print('adding one on')
             i2 = i2 + 1
         else:
+            #print('not adding one on')
             None
-        if gtiend3[i3] - gtiend[counter] < 1e-6 and i3<ngti3:
+        if gtiend3[i3] - gtiend[counter] < 1e-6 and i3<ngti3-1:
             i3 = i3 + 1
         else:
             None
@@ -101,15 +115,15 @@ def master_GTI(data1,data2,data3,output_file):
         
       #  else:
       #      None 
-            if gtiend1[i1] - tlatest < 1e-6 and i1<ngti1:
+            if gtiend1[i1] - tlatest < 1e-6 and i1<ngti1-1:
                 i1 = i1 + 1
             else:
                 None
-            if gtiend2[i2] - tlatest < 1e-6 and i2<ngti2:
+            if gtiend2[i2] - tlatest < 1e-6 and i2<ngti2-1:
                 i2 = i2 + 1
             else:
                 None
-            if gtiend3[i3] - tlatest < 1e-6 and i3<ngti3:
+            if gtiend3[i3] - tlatest < 1e-6 and i3<ngti3-1:
                 i3 = i3 + 1
             else:
                 None
@@ -117,7 +131,14 @@ def master_GTI(data1,data2,data3,output_file):
         else:
             None
 
-            
+        print(gtiend[counter])
+
+        if counter> 0:
+            if gtiend[counter]<=gtiend[counter-1]:
+                break
+            else:
+                None
+
         #print(i1)
        # print(gtistart1[i1])
         beep=gtiend[counter]   
