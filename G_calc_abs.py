@@ -11,7 +11,7 @@ warnings.filterwarnings('ignore')
 def G_calc(mod_min, mod_max,data_1,lc_ref,GTI,bin_length, seg_length, fmin, fmax,mod_bin_number,spur_sub,norm):
     """ Process a single modulation angle range and return the averaged real and imaginary power. """
     # Filter data for the current modulation angle range
-    print('In G_calc')
+    #print('In G_calc')
     av_mod=np.mean([mod_min,mod_max])
     data_phi=data_1['PHI']
     #print(len(data_phi))   
@@ -101,5 +101,5 @@ def G_calc(mod_min, mod_max,data_1,lc_ref,GTI,bin_length, seg_length, fmin, fmax
     m=cs.m #the number of cross spectra averaged together
     
     spur_sub_norm=normalisation
-    print('G(phi) calculated')
+    #print('G(phi) calculated')
     return G_real, G_im, n, m, lc_subject,lc_spur,cs,spur_sub_norm

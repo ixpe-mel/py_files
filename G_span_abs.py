@@ -6,7 +6,7 @@ from functools import partial
 import importlib
 importlib.reload(Gc)
 def G_span(mod_bin_number,data_1,lc_ref,GTI,bin_length, seg_length, fmin, fmax,spur_sub,norm='abs'):
-    print(' In G_span')
+    #print(' In G_span')
     #create modulation angle bins
     mod_min_global = np.radians(-90)
     mod_max_global = np.radians(90)

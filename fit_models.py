@@ -17,3 +17,4 @@ def sin_90(x,A_0,A,delta):
 def sin_180(x,A_0,A,delta):
         y=A_0 + A*(np.sin((2*(np.array(x)+delta))))
         return y
+
