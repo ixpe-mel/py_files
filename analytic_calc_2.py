@@ -120,8 +120,10 @@ def Analytic_model_rms_phase(source_name,file_1,file_2,
         I_TOT, dI_TOT_sqrd = 0, 0
         Q_TOT, dQ_TOT_sqrd = 0, 0
         U_TOT, dU_TOT_sqrd = 0, 0
-
+        Q_uncorr_new_tot, U_uncorr_new_tot= 0, 0
         Q_uncorr, U_uncorr, I_uncorr = 0, 0, 0
+        mue_eff_hunch_gamma =[]
+
 
         for j in range(1, 4):  # Loop over DU1, DU2, DU3
             phase_DU = eval(f'phase_DU{j}')
@@ -152,6 +154,12 @@ def Analytic_model_rms_phase(source_name,file_1,file_2,
                 W_MOM_phase_cut, q_phase_cut, u_phase_cut, Aeff_event, Aeff_mu_event
             )
 
+
+            Q_un, U_un = csa.calculate_stokes_uncorrected(W_MOM_phase_cut, q_phase_cut, u_phase_cut, Aeff_event)
+
+            #mu_eff_hunch=np.sqrt(Q_uncorr**2+U_uncorr**2  /(Q**2+ U**2))
+            
+
             # Accumulate for total
             I_TOT += I
             dI_TOT_sqrd += dI**2
@@ -159,6 +167,13 @@ def Analytic_model_rms_phase(source_name,file_1,file_2,
             dQ_TOT_sqrd += dQ**2
             U_TOT += U
             dU_TOT_sqrd += dU**2
+            print(f'  Q:{Q}, U:{U}')
+
+            Q_uncorr_new_tot += Q_un
+            U_uncorr_new_tot += U_un
+            print(f'Q_uncorr_new_tot:{Q_uncorr_new_tot}, U_uncorr_new_tot:{U_uncorr_new_tot}')
+
+            
 
             if j == 1 or j == 2:  # Store sum of DU1 and DU2
                 if j == 1:
@@ -173,11 +188,22 @@ def Analytic_model_rms_phase(source_name,file_1,file_2,
         dQ_TOT = np.sqrt(dQ_TOT_sqrd)
         dU_TOT = np.sqrt(dU_TOT_sqrd)
 
+        
+
+
         # Compute normalized Stokes parameters
         q_phase_cut = Q_TOT / I_TOT
         u_phase_cut = U_TOT / I_TOT
         dq_phase_cut = dQ_TOT / I_TOT
         du_phase_cut = dU_TOT / I_TOT
+
+        # Compute uncorrected Stokes parameters
+        q_uncorr=Q_uncorr_new_tot / I_TOT
+        u_uncorr=U_uncorr_new_tot / I_TOT
+
+        mue_eff_hunch= np.sqrt(q_uncorr**2+u_uncorr**2 /(q_phase_cut**2+ u_phase_cut**2))
+        print('mue_eff_hunch:',mue_eff_hunch)
+        mue_eff_hunch_gamma.append(mue_eff_hunch)
 
         # Compute polarization degree and angle
         PD_phase_cut = np.sqrt(q_phase_cut**2 + u_phase_cut**2)
@@ -252,9 +278,10 @@ def Analytic_model_rms_phase(source_name,file_1,file_2,
     #rms_ratio=
     rms_ratio=0.28520197995386165/I_ps_frac_rms #rxj estimate
     ##rms_ratio=0.88256
-    print('rxj rms ratio:',rms_ratio)
+    #rms_ratio=1
+    #print('rxj rms ratio:',rms_ratio)
     #rms_ratio=1.2847  #herx1 estimate
-    print('rms ratio:',rms_ratio)
+    #print('rms ratio:',rms_ratio)
     
     C_gamma_array=((C_gamma_array-np.mean(C_gamma_array))*rms_ratio)+np.mean(C_gamma_array)
 
@@ -424,6 +451,10 @@ def Analytic_model_rms_phase(source_name,file_1,file_2,
     plt.title('PA')
     plt.show()
 
+
+
+    mueff_hunch_weighted= np.sum(mue_eff_hunch_gamma* C_gamma_array)/np.sum(C_gamma_array)
+    print('mue_eff_hunch_weighted:',mueff_hunch_weighted)
     for i in mod_angle_bin_list:
 
         mod_mid=np.mean(i[1])
@@ -435,7 +466,7 @@ def Analytic_model_rms_phase(source_name,file_1,file_2,
         #plt.plot(phase_plot,mod_func,'.')
         #plt.show()
 
-        dc= np.array(C_gamma_array) * (mod_angle_bin_width/np.pi) * ( 1 + ( (mueff*PD_array) * (np.cos((2*PA_array)-(2*mod_mid))) ))
+        dc= np.array(C_gamma_array) * (mod_angle_bin_width/np.pi) * ( 1 + ( (mueff_hunch_weighted*PD_array) * (np.cos((2*PA_array)-(2*mod_mid))) ))
         
         
         I_lc_12_subject=Lightcurve(phase_plot,dc)
